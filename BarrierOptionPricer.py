@@ -2,8 +2,7 @@ import numpy as np
 from scipy.linalg import cholesky
 import matplotlib.pyplot as plt
 
-
-def monte_carlo_pricer(spot, K, T, r, theta, kappa, sigma, vt1, op_type, corr=0.5, barrier1=0,barrier2=0):
+def monte_carlo_pricer(spot, K, T, r, vt_bar, omega, eta, vt0, op_type, corr=0.5, barrier1=0,barrier2=0):
   
   # Monte Carlo Parameters
   N = 1000   # number of time steps
@@ -19,22 +18,22 @@ def monte_carlo_pricer(spot, K, T, r, theta, kappa, sigma, vt1, op_type, corr=0.
   W = Z @ lower_chol
 
   # Heston model adjustments for time steps
-  kappadt = kappa*dt
-  sigmasdt = sigma*np.sqrt(dt)
+  omegadt = omega*dt
+  etadt = eta*np.sqrt(dt)
 
   # arrays for storing prices and variances
   lnSt = np.full(shape=(N+1,M), fill_value=np.log(spot))
 
   asset = np.full(shape=(N+1,M), fill_value=spot)
 
-  vt = np.full(shape=(N+1,M), fill_value=vt1)
+  vt = np.full(shape=(N+1,M), fill_value=vt0)
 
   Barrier = np.full(shape=(1,M), fill_value=1)
 
   for j in range(1,N+1):
 
     # Simulate variance processes using Heston
-    vt[j] = vt[j-1] + kappadt*(theta - vt[j-1]) + sigmasdt*np.sqrt(vt[j-1])*W[j-1,:,1]
+    vt[j] = vt[j-1] + omegadt*(vt_bar - vt[j-1]) + etadt*np.sqrt(vt[j-1])*W[j-1,:,1]
 
     # Simulate log asset prices using BS formula
     nu1dt = (r - 0.5*vt[j])*dt
