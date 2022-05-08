@@ -1,6 +1,5 @@
 from fbm import fbm, fgn, times
 import matplotlib.pyplot as plt
-import numpy as np
 
 # Generate a fBm realization
 fbm_low_H = fbm(n=1024, hurst=0.25, length=1, method='daviesharte')
