@@ -101,19 +101,25 @@ def monte_carlo_pricer(spot, K, T, r, vt_bar, omega, eta, vt0, op_type, corr=0.5
   #transpose again so columns are price processes
   St_B = np.transpose(barrier_hit_array)
   St_nB = np.transpose(barrier_not_hit_array)
+  
+  print(C0)
 
   #generate plots
   t = np.linspace(0,1,len(St))
   fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(20,8))
-  ax[0].plot(t,St_nB[:,:20], 'g')
-  ax[0].plot(t,St_B[:,:20], 'r')
-  ax[0].set_title('Option Price')
+  if barrier1 != 0 or barrier2 != 0:
+    ax[0].plot(t,St_nB[:,:20], 'g')
+    ax[0].plot(t,St_B[:,:20], 'r')
+  else:
+    ax[0].plot(t,St[:,:20], 'g')
+  ax[0].set_title('Asset Price')
   ax[1].plot(t,vt[:,:20])
-  ax[1].set_title('Volatility')
+  ax[1].set_title('Variance')
+
 
   fig.suptitle("Option with Stochastic Volatility", fontsize=14)
   plt.show()
 
-  return(C0)
+  
 
 #monte_carlo_pricer(100,100,1,0.01828,0.02,0.1,0.05,0.03,"put",0.5,barrier1=80,barrier2=120)
